@@ -1,6 +1,7 @@
 import { fetchGallery } from "./fetch-gallary";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
+import Notiflix from 'notiflix';
 
 const form = document.querySelector(".search-form");
 const buttonLoad = document.querySelector(".load-more");
@@ -28,7 +29,8 @@ async function handleSubmit(event) {
     const res = await fetchGallery(value, page);
     totalHits = res.totalHits;
     renderImage(res);
-    buttonLoad.classList.remove('is-hidden');
+    // buttonLoad.classList.remove('is-hidden');
+
   } catch (error) {
     console.log("this is error", error);
   }
@@ -36,6 +38,15 @@ async function handleSubmit(event) {
 
 function renderImage(data) {
   console.log("data", data);
+  if (data.totalHits === 0) {
+    buttonLoad.classList.add('is-hidden');
+    gallery.innerHTML = '';
+    // alert('error')
+    Notiflix.Notify.info('Sorry, there are no images matching your search query. Please try again.');
+    return;
+  }
+  buttonLoad.classList.remove('is-hidden');
+
   const cardSet = data.hits.map(card => (
     `
   <div class="photo-card">
@@ -66,7 +77,7 @@ function renderImage(data) {
 
   gallery.innerHTML = cardSet;
   // 
-  const lightbox = new SimpleLightbox('.gallery a', { });
+  const lightbox = new SimpleLightbox('.gallery a', {});
 };
 
 
@@ -78,6 +89,6 @@ async function loadMore() {
   // Check if the total hits have been reached
   if (page * 40 >= totalHits) {
     buttonLoad.classList.add('is-hidden');
-    gallery.insertAdjacentHTML('beforeend', '<p>We\'re sorry, but you\'ve reached the end of search results.</p>');
+    Notiflix.Notify.info('We are sorry, but you`ve reached the end of search results.');
   }
 };

@@ -102,6 +102,7 @@ p {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  background-color: rgb(147, 147, 239);
 }
 
 .is-hidden {
