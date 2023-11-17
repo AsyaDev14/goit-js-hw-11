@@ -16,15 +16,16 @@ let totalHits = 0;
 async function handleSubmit(event) {
   event.preventDefault();
   try {
+    gallery.innerHTML = '';
+    // Reset page to 1 for a new search
+    page = 1;
     const value = event.currentTarget.elements.searchQuery.value;
     if (!value) {
       buttonLoad.classList.add('is-hidden');
-      gallery.innerHTML = '';
       return;
     }
 
-    // Reset page to 1 for a new search
-    page = 1;
+    
 
     const res = await fetchGallery(value, page);
     totalHits = res.totalHits;
@@ -75,9 +76,11 @@ function renderImage(data) {
     `
   )).join('');
 
-  gallery.innerHTML = cardSet;
+  // gallery.innerHTML = cardSet;
+  gallery.insertAdjacentHTML('beforeend', cardSet)
   // 
   const lightbox = new SimpleLightbox('.gallery a', {});
+  // lightbox.refresh()
 };
 
 
